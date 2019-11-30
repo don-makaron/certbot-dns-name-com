@@ -50,19 +50,19 @@ if __name__ == '__main__':
     if '*' in splitted_domain:
         splitted_domain.remove('*')
 
-    _2nd = '.'.join(splitted_domain[-2:])  # 2nd level: domain.tld
-    _3rd = '.'.join(splitted_domain[:-2])  # rest levels: subdomain2.subdomain
+    top_level_domain = '.'.join(splitted_domain[-2:])  # 2nd level: domain.tld
+    low_level_domain = '.'.join(splitted_domain[:-2])  # rest levels: subdomain2.subdomain
 
     host = '_acme-challenge'
-    fqdn = '{0}.{1}'.format(host, _2nd)
+    fqdn = '{0}.{1}'.format(host, top_level_domain)
 
-    if _3rd:
-        fqdn = '{0}.{1}.{2}'.format(host, _3rd, _2nd)
-        host += '.{0}'.format(_3rd)
+    if low_level_domain:
+        fqdn = '{0}.{1}.{2}'.format(host, low_level_domain, top_level_domain)
+        host += '.{0}'.format(low_level_domain)
 
     # new record
     data = {
-        'domainName': _2nd,
+        'domainName': top_level_domain,
         'host': host,
         'fqdn': fqdn,
         'type': 'TXT',
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         'ttl': 300,
     }
 
-    ncd = NameComDNS(config['auth']['username'], config['auth']['token'], _2nd)
+    ncd = NameComDNS(config['auth']['username'], config['auth']['token'], top_level_domain)
 
     if cmd == 'add':
         ncd.create_record(data)
