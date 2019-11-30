@@ -13,23 +13,23 @@ class NameComDNS:
 
         self.domain_name = domain_name
 
+        self.base_url = 'https://api.name.com/v4/domains/{0}/records'.format(self.domain_name)
+
     def list_records(self):
-        url = 'https://api.name.com/v4/domains/%s/records' % self.domain_name
-        r = requests.get(url, auth=(self.username, self.token))
+        r = requests.get(self.base_url, auth=(self.username, self.token))
 
         return r.json()
 
     def create_record(self, data):
-        url = 'https://api.name.com/v4/domains/%s/records' % self.domain_name
-        r = requests.post(url, data=json.dumps(data), auth=(self.username, self.token))
-        if r.status_code == 200 or r.status_code == 201:
+        r = requests.post(self.base_url, data=json.dumps(data), auth=(self.username, self.token))
+
+        if r.status_code in (requests.codes.ok, requests.codes.created):
             print(r.json())
         else:
-            print('%s: %s' % (r.status_code, r.content))
+            print('{0}: {1}'.format(r.status_code, r.content))
 
     def del_record(self, record_id):
-        url = 'https://api.name.com/v4/domains/%s/records/%s' % (self.domain_name, record_id)
-        r = requests.delete(url, data=data, auth=(self.username, self.token))
+        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), data=data, auth=(self.username, self.token))
 
         print(r.json())
 
