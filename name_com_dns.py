@@ -1,12 +1,16 @@
-import sys
+import configparser
 import json
+import os
+import sys
+
 import requests
 
 
 class NameComDNS:
-    def __init__(self, domain_name):
-        self.username = 'username at name.com'
-        self.token = 'token'
+    def __init__(self, username, token, domain_name):
+        self.username = username
+        self.token = token
+
         self.domain_name = domain_name
 
     def list_records(self):
@@ -31,6 +35,12 @@ class NameComDNS:
 
 
 if __name__ == '__main__':
+    config = configparser.ConfigParser()
+    config.read(os.path.join(os.path.dirname(__file__), '.env'))
+
+    if 'auth' not in config or 'username' not in config['auth'] or 'token' not in config['auth']:
+        print('Create ".env" file and add "username", "token" to "auth" section')
+        sys.exit()
 
     file_name, cmd, certbot_domain, certbot_validation = sys.argv
 
@@ -43,7 +53,7 @@ if __name__ == '__main__':
         'ttl': 300,
     }
 
-    ncd = NameComDNS(certbot_domain)
+    ncd = NameComDNS(config['auth']['username'], config['auth']['token'], certbot_domain)
 
     if cmd == 'add':
         ncd.create_record(data)
