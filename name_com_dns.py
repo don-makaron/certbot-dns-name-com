@@ -44,26 +44,39 @@ if __name__ == '__main__':
 
     file_name, cmd, certbot_domain, certbot_validation = sys.argv
 
+    splitted_domain = certbot_domain.split('.')
+
+    # wildcard domains
+    if '*' in splitted_domain:
+        splitted_domain.remove('*')
+
+    _2nd = '.'.join(splitted_domain[-2:])  # 2nd level: domain.tld
+    _3rd = '.'.join(splitted_domain[:-2])  # rest levels: subdomain2.subdomain
+
+    host = '_acme-challenge'
+    fqdn = '{0}.{1}'.format(host, _2nd)
+
+    if _3rd:
+        fqdn = '{0}.{1}.{2}'.format(host, _3rd, _2nd)
+        host += '.{0}'.format(_3rd)
+
+    # new record
     data = {
-        'domainName': 'lonelyassistant.net',
-        'host': '_acme-challenge',
-        'fqdn': '_acme-challenge.lonelyassistant.net',
+        'domainName': _2nd,
+        'host': host,
+        'fqdn': fqdn,
         'type': 'TXT',
         'answer': certbot_validation,
         'ttl': 300,
     }
 
-    ncd = NameComDNS(config['auth']['username'], config['auth']['token'], certbot_domain)
+    ncd = NameComDNS(config['auth']['username'], config['auth']['token'], _2nd)
 
     if cmd == 'add':
         ncd.create_record(data)
-
     elif cmd == 'clean':
         j = ncd.list_records()
 
         for record in j['records']:
-            if record['host'] == '_acme-challenge':
+            if record['fqdn'].startswith(fqdn):  # `startswith` because '.' at the end, but not in api docs
                 ncd.del_record(record['id'])
-
-
-
