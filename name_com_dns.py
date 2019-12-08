@@ -2,28 +2,32 @@ import configparser
 import json
 import os
 import sys
+from typing import Dict
 
 import requests
 
 
 class NameComDNS:
-    def __init__(self, username, token, domain_name):
+    def __init__(self, username: str, token: str, domain_name: str) -> None:
         if not username or not token:
             raise ValueError('Please specify `username` or `token`')
 
         if not domain_name:
             raise ValueError('Please specify `domain_name`')
 
-        self.domain_name = domain_name
+        self.username: str = username
+        self.token: str = token
 
-        self.base_url = 'https://api.name.com/v4/domains/{0}/records'.format(self.domain_name)
+        self.domain_name: str = domain_name
 
-    def list_records(self):
+        self.base_url: str = 'https://api.name.com/v4/domains/{0}/records'.format(self.domain_name)
+
+    def list_records(self) -> Dict:
         r = requests.get(self.base_url, auth=(self.username, self.token))
 
         return r.json()
 
-    def create_record(self, data):
+    def create_record(self, data: Dict) -> None:
         r = requests.post(self.base_url, data=json.dumps(data), auth=(self.username, self.token))
 
         if r.status_code in (requests.codes.ok, requests.codes.created):
@@ -31,8 +35,8 @@ class NameComDNS:
         else:
             print('{0}: {1}'.format(r.status_code, r.content))
 
-    def del_record(self, record_id):
-        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), auth=(self.username, self.token))
+    def del_record(self, record_id: int) -> None:
+        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), data=data, auth=(self.username, self.token))
 
         print(r.json())
 
