@@ -35,8 +35,8 @@ class NameComDNS:
         else:
             print('{0}: {1}'.format(r.status_code, r.content))
 
-    def del_record(self, record_id: int) -> None:
-        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), data=data, auth=(self.username, self.token))
+    def delete_record(self, record_id: int) -> None:
+        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), auth=(self.username, self.token))
 
         print(r.json())
 
@@ -86,4 +86,4 @@ if __name__ == '__main__':
 
         for record in j['records']:
             if record['fqdn'].startswith(fqdn):  # `startswith` because '.' at the end, but not in api docs
-                ncd.del_record(record['id'])
+                ncd.delete_record(record['id'])
