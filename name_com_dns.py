@@ -10,7 +10,7 @@ import requests
 class NameComDNS:
     def __init__(self, username: str, token: str, domain_name: str) -> None:
         if not username or not token:
-            raise ValueError('Please specify `username` or `token`')
+            raise ValueError('Please specify `username` and `token`')
 
         if not domain_name:
             raise ValueError('Please specify `domain_name`')
