@@ -32,7 +32,7 @@ class NameComDNS:
             print('{0}: {1}'.format(r.status_code, r.content))
 
     def del_record(self, record_id):
-        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), data=data, auth=(self.username, self.token))
+        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), auth=(self.username, self.token))
 
         print(r.json())
 
