@@ -82,8 +82,9 @@ if __name__ == '__main__':
     if cmd == 'add':
         ncd.create_record(data)
     elif cmd == 'clean':
+        fqdn += '.'
         j = ncd.list_records()
 
         for record in j['records']:
-            if record['fqdn'].startswith(fqdn):  # `startswith` because '.' at the end, but not in api docs
+            if record['type'] == 'TXT' and record['fqdn'] == fqdn:  # `startswith` because '.' at the end, but not in api docs
                 ncd.delete_record(record['id'])
