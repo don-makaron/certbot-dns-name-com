@@ -61,17 +61,14 @@ if __name__ == '__main__':
     low_level_domain = '.'.join(splitted_domain[:-2])  # rest levels: subdomain2.subdomain
 
     host = '_acme-challenge'
-    fqdn = '.'.join((host, top_level_domain))
 
     if low_level_domain:
         host = '.'.join((host, low_level_domain))
-        fqdn = '.'.join((host, top_level_domain))
 
     # new record
     data = {
         'domainName': top_level_domain,
         'host': host,
-        'fqdn': fqdn,
         'type': 'TXT',
         'answer': certbot_validation,
         'ttl': 300,
@@ -82,9 +79,9 @@ if __name__ == '__main__':
     if cmd == 'add':
         ncd.create_record(data)
     elif cmd == 'clean':
-        fqdn += '.'
+        fqdn = '.'.join((host, top_level_domain, ''))  # empty element for ending `.`
         j = ncd.list_records()
 
         for record in j['records']:
-            if record['type'] == 'TXT' and record['fqdn'] == fqdn:  # `startswith` because '.' at the end, but not in api docs
+            if record['type'] == 'TXT' and record['fqdn'] == fqdn:
                 ncd.delete_record(record['id'])
