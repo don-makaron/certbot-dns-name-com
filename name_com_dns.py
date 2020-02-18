@@ -61,11 +61,11 @@ if __name__ == '__main__':
     low_level_domain = '.'.join(splitted_domain[:-2])  # rest levels: subdomain2.subdomain
 
     host = '_acme-challenge'
-    fqdn = '{0}.{1}'.format(host, top_level_domain)
+    fqdn = '.'.join((host, top_level_domain))
 
     if low_level_domain:
-        fqdn = '{0}.{1}.{2}'.format(host, low_level_domain, top_level_domain)
-        host += '.{0}'.format(low_level_domain)
+        host = '.'.join((host, low_level_domain))
+        fqdn = '.'.join((host, top_level_domain))
 
     # new record
     data = {
