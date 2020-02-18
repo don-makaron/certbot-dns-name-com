@@ -54,8 +54,8 @@ if __name__ == '__main__':
     splitted_domain = certbot_domain.split('.')
 
     # wildcard domains
-    if '*' in splitted_domain:
-        splitted_domain.remove('*')
+    if splitted_domain[0] == '*':
+        splitted_domain = splitted_domain[1:]
 
     top_level_domain = '.'.join(splitted_domain[-2:])  # 2nd level: domain.tld
     low_level_domain = '.'.join(splitted_domain[:-2])  # rest levels: subdomain2.subdomain
