@@ -15,8 +15,10 @@ class NameComDNS:
             raise ValueError('Please specify `domain_name`')
 
         self.domain_name = domain_name
-
         self.base_url = 'https://api.name.com/v4/domains/{0}/records'.format(self.domain_name)
+		
+		self.username = username
+		self.token = token
 
     def list_records(self):
         r = requests.get(self.base_url, auth=(self.username, self.token))
