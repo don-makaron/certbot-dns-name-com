@@ -29,3 +29,19 @@ $ certbot-auto \
     --manual-cleanup-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh cleanup"
 ```
 
+---
+
+### Certonly:
+
+```console
+$ sudo certbot certonly \
+    --server https://acme-v02.api.letsencrypt.org/directory \
+    --agree-tos \
+    --preferred-challenges dns-01 \
+    --manual \
+    --manual-public-ip-logging-ok \
+    --manual-auth-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh add" \
+    --manual-cleanup-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh cleanup" \
+    -m acme@yourdomain.com \
+    -d example.yourdomain.com
+```
