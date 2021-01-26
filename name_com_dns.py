@@ -20,7 +20,7 @@ class NameComDNS:
 
         self.domain_name: str = domain_name
 
-        self.base_url: str = 'https://api.name.com/v4/domains/{0}/records'.format(self.domain_name)
+        self.base_url: str = f'https://api.name.com/v4/domains/{self.domain_name}/records'
 
     def list_records(self) -> Dict:
         r = requests.get(self.base_url, auth=(self.username, self.token))
@@ -33,10 +33,10 @@ class NameComDNS:
         if r.status_code in (requests.codes.ok, requests.codes.created):
             print(r.json())
         else:
-            print('{0}: {1}'.format(r.status_code, r.content))
+            print(f'{r.status_code}: {r.content!r}')
 
     def delete_record(self, record_id: int) -> None:
-        r = requests.delete('{0}/{1}'.format(self.base_url, record_id), auth=(self.username, self.token))
+        r = requests.delete(f'{self.base_url}/{record_id}', auth=(self.username, self.token))
 
         print(r.json())
 
