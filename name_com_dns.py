@@ -32,6 +32,14 @@ class NameComDNS:
 
         if r.status_code in (requests.codes.ok, requests.codes.created):
             print(r.json())
+        elif r.status_code == requests.codes.bad_request:
+            r_json = r.json()
+
+            if r_json['details'] == 'Parameter Value Error - Duplicate Record':
+                # TODO: get record id to UpdateRecord
+                print('Duplicated record: {r.content!r}')
+            else:
+                print(f'{r.status_code}: {r.content!r}')
         else:
             print(f'{r.status_code}: {r.content!r}')
 
