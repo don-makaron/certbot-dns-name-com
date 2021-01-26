@@ -8,9 +8,24 @@ Copy `.env.example` file to `.env` and fill with your data
 
 Clone project to `/usr/local` or copy files to `/usr/local/certbot-dns-name-com`, otherwise - correct paths in scripts
 
-check:
-`$ certbot-auto renew --cert-name yourdomain.com --manual-auth-hook /usr/local/certbot-dns-name-com/certbot_dns_auth.sh --dry-run`
+`$ chmod u+x /usr/local/certbot-dns-name-com/certbot_dns_auth.sh`
 
-renew:
-`$ certbot-auto renew --cert-name yourdomain.com --manual-auth-hook /usr/local/certbot-dns-name-com/certbot_dns_auth.sh`
+check:  
+```console
+$ certbot-auto \
+    renew \
+    --cert-name yourdomain.com \
+    --manual-auth-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh add" \
+    --manual-cleanup-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh cleanup" \
+    --dry-run
+```
+
+renew:  
+```console
+$ certbot-auto \
+    renew \
+    --cert-name yourdomain.com \
+    --manual-auth-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh add" \
+    --manual-cleanup-hook "/usr/local/certbot-dns-name-com/certbot_dns_auth.sh cleanup"
+```
 
